@@ -6,42 +6,54 @@ class DishDetails extends Component{
         super(props);
     }
 
-    
-
-    render(){                
-        if(this.props.selected != null){
-            let selected = this.props.selected;     
-            let comments = this.props.selected.comments;
-
+    renderDish(dish){
+        if(dish != null){
             return(
-                <div className="row">
-                    <div className="col-12 col-md-5 m-1">
-                        <Card>
-                            <CardImg width="100%" src={selected.image} alt={selected.name}/>
-                            <CardBody>
-                                <CardTitle>{selected.name}</CardTitle>
-                                <CardText>{selected.description}</CardText>                            
-                            </CardBody>
-                        </Card>
+                <Card>
+                <CardImg width="100%" src={dish.image} alt={dish.name}/>
+                <CardBody>
+                    <CardTitle>{dish.name}</CardTitle>
+                    <CardText>{dish.description}</CardText>                            
+                </CardBody>
+            </Card>
+            );
+        }else{
+            return(<div></div>);
+        }
+    }
+
+    renderComments(comments){
+        if(comments != null){
+            const list = comments.map((co)=>{
+                return(
+                    <div key={co.id}>
+                        <p>{co.comment}</p>
+                        <p>--{co.author}, <span>{new Intl.DateTimeFormat('en-US', {year:'numeric',month:'short',day:'2-digit'}).format(new Date(co.date))}</span></p>
                     </div>
-                    <div className="col-12 col-md-5 m-1">
-                        <h4>Comments</h4>
-                        {comments.map((co)=>{
-                            return(
-                                <div key={co.id}>
-                                    <p>{co.comment}</p>
-                                    <p>--{co.author}, <span>{new Intl.DateTimeFormat('en-US', {year:'numeric',month:'short',day:'2-digit'}).format(new Date(co.date))}</span></p>
-                                </div>
-                            );
-                        })}       
-                    </div>                                                                           
+                );
+            });
+            return(
+                <div>
+                    <h4>Comments</h4>
+                    <div>{list}</div>
                 </div>
             );
         }else{
-            return(
-                <div></div>
-            );
+            return(<div></div>);            
         }
+    };
+
+    render(){                        
+        return this.props.selected ? (
+            <div className="row">
+                <div className="col-12 col-md-5 m-1">
+                    {this.renderDish(this.props.selected)}
+                </div>
+                <div className="col-12 col-md-5 m-1">
+                    {this.renderComments(this.props.selected.comments)}
+                </div>                                                                           
+            </div>
+        ) : (<div></div>);
     };
 }
 
